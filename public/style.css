@@ -11,6 +11,10 @@
   --radius-lg: 16px;
   --mono: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
   --sans: system-ui, -apple-system, BlinkMacSystemFont, "Inter", Roboto, "Segoe UI", sans-serif;
+
+  --mode-beginner: #22c55e;
+  --mode-pro: #2563eb;
+  --mode-reviewer: #6b7280;
 }
 
 * {
@@ -28,7 +32,17 @@ body {
   flex-direction: column;
 }
 
-/* Top bar */
+/* mode strip color */
+body.beginner .topbar {
+  border-bottom: 3px solid var(--mode-beginner);
+}
+body.pro .topbar {
+  border-bottom: 3px solid var(--mode-pro);
+}
+body.reviewer .topbar {
+  border-bottom: 3px solid var(--mode-reviewer);
+}
+
 .topbar {
   background: #fff;
   border-bottom: 1px solid var(--border-soft);
@@ -73,6 +87,11 @@ body {
   min-width: 180px;
 }
 
+.label-small {
+  font-size: 12px;
+  color: var(--text-dim);
+}
+
 .btn-outline {
   background: #fff;
   border: 1px solid var(--border-soft);
@@ -89,7 +108,7 @@ body {
   border-color: var(--text-main);
 }
 
-/* Layout */
+/* MAIN GRID */
 .layout {
   flex: 1;
   display: grid;
@@ -102,13 +121,14 @@ body {
   border-radius: var(--panel-radius);
   display: flex;
   flex-direction: column;
-  min-height: 500px;
+  min-height: 520px;
 }
 
 .panel-left {
   background: var(--panel-bg-left);
   color: #fff;
   padding: 20px;
+  border: 1px solid #2f2f2f;
 }
 
 .panel-right {
@@ -116,6 +136,8 @@ body {
   border: 1px solid var(--border-soft);
   padding: 20px;
   color: var(--text-main);
+  display: flex;
+  flex-direction: column;
 }
 
 .panel-head {
@@ -132,6 +154,7 @@ body {
 .panel-right h2 {
   font-size: 15px;
   font-weight: 600;
+  color: inherit;
 }
 
 .chip {
@@ -149,10 +172,9 @@ body {
   margin-top: 4px;
 }
 
-/* Code area */
 .code-area {
   width: 100%;
-  min-height: 220px;
+  min-height: 180px;
   background: #111;
   color: #e5e7eb;
   font-family: var(--mono);
@@ -165,6 +187,13 @@ body {
   white-space: pre;
   overflow: auto;
   margin-bottom: 16px;
+}
+
+.light-editor {
+  background: #fff;
+  color: #0f172a;
+  border: 1px solid var(--border-soft);
+  min-height: 200px;
 }
 
 .question-block {
@@ -202,7 +231,7 @@ body {
   display: flex;
   flex-wrap: wrap;
   gap: 12px;
-  margin-top: auto;
+  margin-bottom: 16px;
 }
 
 .btn-primary {
@@ -232,11 +261,59 @@ body {
   background: #1f2937;
 }
 
-/* Right panel: AI response */
-.modeIndicator {
+/* disabled / busy states */
+.loading-btn {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+.loading-btn:disabled {
+  cursor: not-allowed;
+}
+button:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.mode-indicator {
   font-size: 12px;
-  color: var(--text-dim);
+  color: #9ca3af;
+  line-height: 1.4;
+  border-top: 1px solid #374151;
+  padding-top: 12px;
+}
+.mode-indicator span {
+  font-weight: 500;
+  color: #fff;
+}
+.mode-desc {
+  color: #9ca3af;
   margin-top: 4px;
+}
+
+/* RIGHT PANEL CONTENT */
+.tabs-header {
+  display: flex;
+  gap: 8px;
+  margin-bottom: 16px;
+  flex-wrap: wrap;
+}
+
+.tab-btn {
+  background: #fff;
+  border: 1px solid var(--border-soft);
+  border-radius: var(--radius-sm);
+  padding: 8px 12px;
+  font-size: 13px;
+  cursor: pointer;
+  color: var(--text-main);
+}
+.tab-btn.active {
+  border-color: var(--accent);
+  box-shadow: 0 0 0 2px rgba(37, 99, 235, 0.15);
+  font-weight: 500;
+}
+.tab-btn:hover {
+  border-color: var(--text-main);
 }
 
 .loading {
@@ -246,10 +323,17 @@ body {
   padding: 12px;
   border-radius: var(--radius-sm);
   margin-bottom: 16px;
+  color: var(--text-dim);
 }
 
 .hidden {
   display: none;
+}
+
+.tab-panel {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
 }
 
 .response-sections {
@@ -272,15 +356,34 @@ body {
   color: var(--text-main);
 }
 
+.resp-title-row {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 12px;
+}
+.resp-title-row .resp-title {
+  margin-bottom: 0;
+}
+
 .resp-body {
   font-family: var(--mono);
   font-size: 12px;
   line-height: 1.5;
   color: var(--text-main);
   white-space: pre-wrap;
+  word-break: break-word;
 }
 
-/* footer */
+.generated-note {
+  font-size: 11px;
+  color: var(--text-dim);
+  border-top: 1px solid var(--border-soft);
+  padding-top: 8px;
+  line-height: 1.4;
+  margin-top: auto;
+}
+
 .footer {
   font-size: 12px;
   color: var(--text-dim);

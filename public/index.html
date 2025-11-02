@@ -5,7 +5,8 @@
   <title>AI Code Explainer & Refactoring Assistant</title>
   <link rel="stylesheet" href="style.css" />
 </head>
-<body>
+<body class="beginner">
+  <!-- TOP BAR -->
   <header class="topbar">
     <div class="brand">
       <h1>AI Code Explainer & Refactoring Assistant</h1>
@@ -14,7 +15,7 @@
 
     <div class="controls">
       <label class="control-block">
-        <span class="label">Mode</span>
+        <span class="label-small">Mode</span>
         <select id="modeSelect">
           <option value="beginner">Beginner 👶 Teach me slowly</option>
           <option value="pro">Pro 🚀 Keep it concise</option>
@@ -22,23 +23,29 @@
         </select>
       </label>
 
+      <label class="control-block">
+        <span class="label-small">Language</span>
+        <select id="langSelect">
+          <option value="python">Python</option>
+          <option value="javascript">JavaScript</option>
+          <option value="java">Java</option>
+        </select>
+      </label>
+
       <button id="exportBtn" class="btn-outline">Export Report</button>
     </div>
   </header>
 
+  <!-- MAIN LAYOUT -->
   <main class="layout">
-    <!-- LEFT SIDE -->
+    <!-- LEFT PANEL: INPUT -->
     <section class="panel panel-left">
       <div class="panel-head">
         <div class="title-row">
           <h2>Your Code</h2>
-          <select id="langSelect" class="chip">
-            <option>Python</option>
-            <option>JavaScript</option>
-            <option>Java</option>
-          </select>
+          <span class="chip">Max 200 lines</span>
         </div>
-        <p class="hint">Max 200 lines per request</p>
+        <p class="hint">Paste your function or snippet below</p>
       </div>
 
       <textarea id="codeInput" class="code-area" spellcheck="false">
@@ -58,59 +65,134 @@ def find_max(nums):
         <input
           id="questionInput"
           class="question-input"
-          placeholder="Explain this step-by-step and tell me if it handles edge cases."
+          placeholder="Explain this step-by-step and tell me if it's safe and efficient."
         />
       </label>
 
       <div class="actions-row">
-        <button id="analyzeBtn" class="btn-primary">Generate Analysis</button>
-        <button id="clearBtn"   class="btn-ghost">Clear</button>
+        <button id="analyzeBtn" class="btn-primary">Analyze Code</button>
+        <button id="refactorBtn" class="btn-ghost">Refactor Code</button>
+        <button id="testsBtn" class="btn-ghost">Generate Tests</button>
+        <button id="clearBtn" class="btn-outline small">Clear</button>
+      </div>
+
+      <div class="mode-indicator">
+        <div>Current mode: <span id="currentModeText">Beginner 👶</span></div>
+        <div class="mode-desc" id="currentModeDesc">
+          Explanations will be slow, friendly and include inputs/outputs.
+        </div>
       </div>
     </section>
 
-    <!-- RIGHT SIDE -->
+    <!-- RIGHT PANEL: OUTPUT -->
     <section class="panel panel-right">
-      <div class="panel-head">
-        <h2>AI Response</h2>
-        <p class="modeIndicator">Mode: <span id="currentModeText">Beginner 👶</span></p>
+      <!-- TAB HEADERS -->
+      <div class="tabs-header">
+        <button class="tab-btn active" data-tab="tab-explain" id="tabExplainBtn">Explanation</button>
+        <button class="tab-btn" data-tab="tab-refactor" id="tabRefactorBtn">Refactored Code</button>
+        <button class="tab-btn" data-tab="tab-tests" id="tabTestsBtn">Unit Tests</button>
       </div>
 
+      <!-- LOADING STATE -->
       <div id="loading" class="loading hidden">Thinking...</div>
 
-      <div id="responseArea" class="response-sections hidden">
-        <div class="resp-card">
-          <div class="resp-title">Summary</div>
-          <pre id="respSummary" class="resp-body"></pre>
+      <!-- TAB: EXPLANATION -->
+      <div class="tab-panel" id="tab-explain">
+        <div class="response-sections" id="explainSection" >
+          <!-- Summary -->
+          <div class="resp-card">
+            <div class="resp-title">Summary</div>
+            <pre id="respSummary" class="resp-body"></pre>
+          </div>
+
+          <!-- Inputs / Outputs (Beginner only, hidden for others) -->
+          <div class="resp-card" id="inputsOutputsSection">
+            <div class="resp-title">Inputs / Outputs</div>
+            <pre id="respInputsOutputs" class="resp-body"></pre>
+          </div>
+
+          <!-- Steps -->
+          <div class="resp-card">
+            <div class="resp-title">Step-by-step Explanation</div>
+            <pre id="respSteps" class="resp-body"></pre>
+          </div>
+
+          <!-- Complexity -->
+          <div class="resp-card">
+            <div class="resp-title">Time / Space Complexity</div>
+            <pre id="respComplexity" class="resp-body"></pre>
+          </div>
+
+          <!-- Improvements -->
+          <div class="resp-card">
+            <div class="resp-title">Suggested Improvements</div>
+            <pre id="respImprovements" class="resp-body"></pre>
+          </div>
+
+          <!-- Caution -->
+          <div class="resp-card">
+            <div class="resp-title">Caution / Edge Cases</div>
+            <pre id="respCaution" class="resp-body"></pre>
+          </div>
         </div>
 
-        <div class="resp-card">
-          <div class="resp-title">Step-by-step Explanation</div>
-          <pre id="respExplanation" class="resp-body"></pre>
-        </div>
-
-        <div class="resp-card">
-          <div class="resp-title">Possible Improvements</div>
-          <pre id="respImprovements" class="resp-body"></pre>
-        </div>
-
-        <div class="resp-card">
-          <div class="resp-title">Quality & Testing</div>
-          <pre id="respQuality" class="resp-body"></pre>
+        <div class="generated-note">
+          Generated by local AI (phi via Ollama). This is assistance, not final review.
         </div>
       </div>
 
-      <div class="actions-row">
-        <button class="btn-outline small">Refactor Code</button>
-        <button class="btn-outline small">Generate Unit Tests</button>
+      <!-- TAB: REFACTORED CODE -->
+      <div class="tab-panel hidden" id="tab-refactor">
+        <div class="resp-card">
+          <div class="resp-title-row">
+            <div class="resp-title">Refactored Code</div>
+            <button id="copyRefactorBtn" class="btn-outline small">Copy</button>
+          </div>
+          <textarea
+            id="refactorOutputBox"
+            class="code-area light-editor"
+            readonly
+            spellcheck="false"
+          ></textarea>
+        </div>
+
+        <div class="resp-card">
+          <div class="resp-title">Why this refactor is better</div>
+          <pre id="refactorWhy" class="resp-body"></pre>
+        </div>
+
+        <div class="generated-note">
+          Refactoring tries to keep same behaviour but improve clarity and safety.
+        </div>
+      </div>
+
+      <!-- TAB: TESTS -->
+      <div class="tab-panel hidden" id="tab-tests">
+        <div class="resp-card">
+          <div class="resp-title">Generated Unit Tests</div>
+          <textarea
+            id="testOutputBox"
+            class="code-area light-editor"
+            readonly
+            spellcheck="false"
+          ></textarea>
+        </div>
+
+        <div class="resp-card">
+          <div class="resp-title">Test Coverage Notes</div>
+          <pre id="testNotes" class="resp-body"></pre>
+        </div>
+
+        <div class="generated-note">
+          These tests are suggestions. Review before using in production.
+        </div>
       </div>
     </section>
   </main>
 
+  <!-- FOOTER -->
   <footer class="footer">
-    <p>
-      This tool is designed to assist developers, not replace them.
-      You still own your code and your review.
-    </p>
+    This tool is designed to support developers, not replace them. You still own your code and review.
   </footer>
 
   <script src="main.js"></script>
