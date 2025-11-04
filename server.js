@@ -124,6 +124,7 @@ ${code}
     let parsed;
     try {
       parsed = JSON.parse(raw);
+      console.log(parsed);
     } catch (e) {
       console.warn("⚠ JSON parse failed, fallback used.");
       parsed = null;
@@ -195,6 +196,7 @@ For PRO mode:
 - Keep one-liners where possible.
 - Do NOT include comments.
 - Use Pythonic best practices.
+- Keep it simple
 
 Return ONLY valid JSON, no markdown.
 
@@ -231,6 +233,7 @@ ${code}
     let parsed;
     try {
       parsed = JSON.parse(raw);
+      console.log(parsed);
     } catch (e) {
       console.warn("⚠ JSON parse failed for refactor, fallback used.");
       parsed = null;
@@ -270,11 +273,10 @@ app.post("/api/tests", async (req, res) => {
 
   const prompt = `
 You are an AI test generator.
-Generate unit tests for the given code in ${language || "python"}.
+Generate unit testing for the given code in python using "import unittest"
 Include:
-- Normal case
-- Edge case
-- Invalid input case
+- test_code: the unit test generated for the python code provided below
+- notes : provide explanation for the unit testing provided
 Return ONLY valid JSON.
 
 Return JSON:
@@ -310,6 +312,7 @@ ${code}
     let parsed;
     try {
       parsed = JSON.parse(raw);
+      console.log(parsed)
     } catch {
       parsed = {
         test_code: "// Could not parse tests output.",

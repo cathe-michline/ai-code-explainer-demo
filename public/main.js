@@ -117,8 +117,14 @@ function formatImprovements(improvements) {
 }
 
 function setCodeLanguage(el, lang) {
-  // reset classes
-  el.className = "";
+  // remove any existing language-* classes but keep others
+  el.classList.forEach((cls) => {
+    if (cls.startsWith("language-")) {
+      el.classList.remove(cls);
+    }
+  });
+
+  // append the correct language class
   if (lang === "python") {
     el.classList.add("language-python");
   } else if (lang === "javascript") {
