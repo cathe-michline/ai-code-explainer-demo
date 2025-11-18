@@ -37,8 +37,8 @@ This project uses AI to explain functionality, detect potential issues, suggest 
 - Clean, beginner-friendly layout
 
 ---
+## 🧰 Tech Stack
 
-## 🏗️ Architecture Overview
-
-The project follows a modular architecture:
-
+- **Frontend:** React / Angular (update based on your repo)  
+- **Backend:** Node.js / Python FastAPI  
+- **AI Integration:** Ollama - Free LLM Framework
